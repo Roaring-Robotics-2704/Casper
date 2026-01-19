@@ -17,8 +17,8 @@ import edu.wpi.first.math.util.Units;
 public class DriveConstants {
   public static final double maxSpeedMetersPerSec = 4.8;
   public static final double odometryFrequency = 100.0; // Hz
-  public static final double trackWidth = Units.inchesToMeters(29);
-  public static final double wheelBase = Units.inchesToMeters(24);
+  public static final double trackWidth = Units.inchesToMeters(26.5);
+  public static final double wheelBase = Units.inchesToMeters(21.5);
   public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
   public static final Translation2d[] moduleTranslations =
       new Translation2d[] {
@@ -64,9 +64,9 @@ public class DriveConstants {
   // Wheel Rad/Sec
 
   // Drive PID configuration
-  public static final double driveKp = 0.01;
-  public static final double driveKd = 0.002;
-  public static final double driveKs = 0.06;
+  public static final double driveKp = 0.00;
+  public static final double driveKd = 0.00;
+  public static final double driveKs = 0.00;
   public static final double driveKv = 0.1;
   public static final double driveSimP = 0.05;
   public static final double driveSimD = 0.0;
