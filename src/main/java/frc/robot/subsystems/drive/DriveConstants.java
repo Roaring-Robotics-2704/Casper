@@ -28,7 +28,7 @@ public class DriveConstants {
         new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0)
       };
 
-  // Zeroed rotation values for each module, see setup instructions
+  // Zeroed rotation values for each module
   public static final Rotation2d frontLeftZeroRotation = new Rotation2d(-1.51);
   public static final Rotation2d frontRightZeroRotation = new Rotation2d(.03);
   public static final Rotation2d backLeftZeroRotation = new Rotation2d(-3.13);
