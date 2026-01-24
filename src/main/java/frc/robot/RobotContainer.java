@@ -8,6 +8,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.FlippingUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -117,6 +120,14 @@ public class RobotContainer {
     // -> -controller.getLeftX(),()->{return 0.0;}));
 
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller
+        .a()
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> controller.getLeftY(),
+                () -> controller.getLeftX(),
+                this::getAngleToHub));
   }
 
   /**
@@ -126,5 +137,17 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  public Pose2d getHubPose() {
+    return Robot.isRedAlliance()
+        ? FlippingUtil.flipFieldPose(Constants.HUB_POSE2D)
+        : Constants.HUB_POSE2D;
+  }
+
+  public Rotation2d getAngleToHub() {
+    Pose2d hub = getHubPose();
+    Pose2d robot = drive.getPose();
+    return Rotation2d.fromRadians(Math.atan2(hub.getY() - robot.getY(), hub.getX() - robot.getX()));
   }
 }
