@@ -111,7 +111,7 @@ public class RobotContainer {
             drive,
             () -> controller.getLeftY(),
             () -> controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> controller.getRightX()));
 
     // controller.a().whileTrue(DriveCommands.joystickDrive(drive, () -> -controller.getLeftY(), ()
     // -> -controller.getLeftX(),()->{return 0.0;}));
