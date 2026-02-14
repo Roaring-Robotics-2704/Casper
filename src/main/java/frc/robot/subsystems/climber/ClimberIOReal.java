@@ -6,6 +6,7 @@ package frc.robot.subsystems.climber;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -26,6 +27,7 @@ public class ClimberIOReal implements ClimberIO {
     config.smartCurrentLimit(
         ClimberConstants.CLIMBER_STALL_CURRENT_LIMIT, ClimberConstants.CLIMBER_FREE_CURRENT_LIMIT);
     config.idleMode(IdleMode.kBrake);
+    config.encoder.positionConversionFactor(ClimberConstants.CLIMBER_GEARING * ClimberConstants.CLIMBER_PULLEY_CIRCUMFERENCE.in(Inches));
 
     SparkUtil.tryUntilOk(
         climberMotor,
@@ -68,5 +70,6 @@ public class ClimberIOReal implements ClimberIO {
     inputs.climberPosition.mut_replace(climberMotor.getEncoder().getPosition(), Inches);
     inputs.climberCurrent.mut_replace(climberMotor.getOutputCurrent(), Amps);
     inputs.hookCurrent.mut_replace(hookMotor.getOutputCurrent(), Amps);
+    inputs.climberVoltage.mut_replace(hookMotor.getBusVoltage(), Volts);
   }
 }

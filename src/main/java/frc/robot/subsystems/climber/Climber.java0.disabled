@@ -41,7 +41,7 @@ public class Climber extends SubsystemBase {
       switch (desiredState) {
         case CALIBRATING:
           startTimer();
-          climberIO.setClimberVoltage(-2);
+          climberIO.setClimberVoltage(-6);
 
           if ((inputs.climberVelocity.in(InchesPerSecond) <0.00001) && timeoutTimer.hasElapsed(0.5)) {
             climberIO.resetClimberEncoder();

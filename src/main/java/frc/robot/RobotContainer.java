@@ -159,4 +159,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
+
+  public void calibrate() {
+    climber.setDesiredState(ClimberState.CALIBRATING);
+  }
 }

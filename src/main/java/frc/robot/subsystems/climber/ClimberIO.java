@@ -7,10 +7,12 @@ package frc.robot.subsystems.climber;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.InchesPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.units.measure.MutCurrent;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
 import org.littletonrobotics.junction.AutoLog;
 
 /** Add your docs here. */
@@ -21,6 +23,7 @@ public interface ClimberIO {
     public MutDistance climberPosition = Inches.mutable(0);
     public MutCurrent climberCurrent = Amps.mutable(0);
     public MutLinearVelocity climberVelocity = InchesPerSecond.mutable(0);
+    public MutVoltage climberVoltage = Volts.mutable(0);
 
     public MutCurrent hookCurrent = Amps.mutable(0);
   }

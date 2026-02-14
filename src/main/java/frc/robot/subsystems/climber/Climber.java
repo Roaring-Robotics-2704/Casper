@@ -28,7 +28,7 @@ public class Climber extends SubsystemBase {
   private final ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
 
   private ClimberState currentState = ClimberState.BOTTOM;
-  private ClimberState desiredState = ClimberState.CALIBRATING;
+  private ClimberState desiredState = ClimberState.BOTTOM;
 
   /** Creates a new Climber. */
   public Climber(ClimberIO climberIO) {
@@ -44,10 +44,10 @@ public class Climber extends SubsystemBase {
       switch (desiredState) {
         case CALIBRATING:
           startTimer();
-          climberIO.setClimberVoltage(-2);
+          climberIO.setClimberVoltage(-1);
           climberIO.setHookVoltage(0);
           if ((inputs.climberVelocity.in(InchesPerSecond) < 0.00001)
-              && timeoutTimer.hasElapsed(0.5)) {
+              && timeoutTimer.hasElapsed(5)) {
             climberIO.setClimberVoltage(0);
             climberIO.resetClimberEncoder();
             stopTimer();
@@ -58,7 +58,7 @@ public class Climber extends SubsystemBase {
           break;
         case BOTTOM:
           startTimer();
-          climberIO.setClimberVoltage(-6);
+          climberIO.setClimberVoltage(-1);
           climberIO.setHookVoltage(0);
           if (inputs.climberPosition.mut_minus(MIN_CLIMBER_HEIGHT).in(Inches)
                   < CLIMBER_TOLERANCE.in(Inches)
@@ -70,12 +70,12 @@ public class Climber extends SubsystemBase {
           break;
         case MIDDLE:
           startTimer();
-          climberIO.setHookVoltage(6);
+          climberIO.setHookVoltage(1);
           if (inputs.climberPosition.in(Inches) > MID_CLIMBER_HEIGHT.in(Inches)) {
-            climberIO.setClimberVoltage(-6);
+            climberIO.setClimberVoltage(-2);
 
           } else {
-            climberIO.setClimberVoltage(6);
+            climberIO.setClimberVoltage(1);
           }
           if (inputs.climberPosition.mut_minus(MID_CLIMBER_HEIGHT).in(Inches)
                   < CLIMBER_TOLERANCE.in(Inches)
@@ -87,8 +87,8 @@ public class Climber extends SubsystemBase {
           break;
         case TOP:
           startTimer();
-          climberIO.setClimberVoltage(6);
-          climberIO.setHookVoltage(6);
+          climberIO.setClimberVoltage(1);
+          climberIO.setHookVoltage(2);
           if (inputs.climberPosition.mut_minus(MAX_CLIMBER_HEIGHT).in(Inches)
                   < CLIMBER_TOLERANCE.in(Inches)
               || timeoutTimer.hasElapsed(5)) {

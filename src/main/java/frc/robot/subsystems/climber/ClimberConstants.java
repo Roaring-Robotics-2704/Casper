@@ -13,7 +13,7 @@ import edu.wpi.first.units.measure.Distance;
 public class ClimberConstants {
   public static final int CLIMBER_MOTOR_ID = 41;
   public static final int CLIMBER_STALL_CURRENT_LIMIT = 40;
-  public static final int CLIMBER_FREE_CURRENT_LIMIT = 20;
+  public static final int CLIMBER_FREE_CURRENT_LIMIT = 40;
 
   public static final Distance CLIMBER_PULLEY_CIRCUMFERENCE =
       Inches.of(3.0 * Math.PI); // Assuming a 3 inch diameter pulley
@@ -27,10 +27,10 @@ public class ClimberConstants {
   public static final DCMotor HOOK_MOTOR_TYPE = DCMotor.getNeo550(1);
 
   public static final Distance MAX_CLIMBER_HEIGHT =
-      Inches.of(24); // Maximum height the climber can reach
+      Inches.of(10); // Maximum height the climber can reach
   public static final Distance MIN_CLIMBER_HEIGHT =
       Inches.of(0); // Minimum height the climber can reach
-  public static final Distance MID_CLIMBER_HEIGHT = Inches.of(12); // Middle height of the climber
+  public static final Distance MID_CLIMBER_HEIGHT = Inches.of(5); // Middle height of the climber
   public static final Distance CLIMBER_TOLERANCE =
       Inches.of(0.5); // Tolerance for reaching target heights
 }
