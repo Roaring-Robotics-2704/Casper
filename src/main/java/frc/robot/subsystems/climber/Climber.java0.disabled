@@ -1,0 +1,126 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+/**
+ * Climber States Calibrating -> full power to bring the climber down - once velocity is zero we
+ * know its at the bottom (or current spikes) - units (distance mutable inches) Stopped_Bottom -> No
+ * power using brake, position is bottom Transition_to_up -> power (CCW) until calculated height
+ * (timeout of 5 seconds) Stopped_Up -> No power, using brake, position at the top
+ * Transition_to_middle_from_up -> power to go to middle until calculated height (*if needed use
+ * PID) Stopped_Middle -> stopped in the middle
+ */
+package frc.robot.subsystems.climber;
+
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import static edu.wpi.first.units.Units.InchesPerSecond;
+
+import org.littletonrobotics.junction.Logger;
+
+public class Climber extends SubsystemBase {
+  private final ClimberIO climberIO;
+  private final Timer timeoutTimer = new Timer();
+  private final ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
+
+  private ClimberState currentState = ClimberState.STOPPED_BOTTOM;
+  private ClimberState desiredState = ClimberState.CALIBRATING;
+
+  /** Creates a new Climber. */
+  public Climber(ClimberIO climberIO) {
+    this.climberIO = climberIO;
+  }
+
+  @Override
+  public void periodic() {
+    climberIO.updateInputs(inputs);
+    Logger.processInputs("Climber", inputs);
+    
+    if (currentState != desiredState) {
+      switch (desiredState) {
+        case CALIBRATING:
+          startTimer();
+          climberIO.setClimberVoltage(-2);
+
+          if ((inputs.climberVelocity.in(InchesPerSecond) <0.00001) && timeoutTimer.hasElapsed(0.5)) {
+            climberIO.resetClimberEncoder();
+            stopTimer();
+            currentState = ClimberState.STOPPED_BOTTOM;
+            desiredState = ClimberState.STOPPED_BOTTOM;
+          }
+
+          break;
+        case STOPPED_BOTTOM:
+          climberIO.setClimberVoltage(0);
+          currentState = ClimberState.STOPPED_BOTTOM;
+          desiredState = ClimberState.STOPPED_BOTTOM;
+          break;
+        case TRANSITION_TO_UP:
+          startTimer();
+          climberIO.setClimberVoltage(6);
+          if (inputs.climberPosition.in(edu.wpi.first.units.Units.Inches) > 50) {
+            stopTimer();
+            desiredState = ClimberState.STOPPED_UP;
+            currentState = ClimberState.STOPPED_UP;
+          } else if (timeoutTimer.hasElapsed(5)) {
+            stopTimer();
+            desiredState = ClimberState.STOPPED_UP;
+            currentState = ClimberState.STOPPED_UP;
+          }
+          break;
+        case STOPPED_UP:
+          climberIO.setClimberVoltage(0);
+          currentState = ClimberState.STOPPED_UP;
+          desiredState = ClimberState.STOPPED_UP;
+          break;
+        case TRANSITION_TO_MIDDLE_FROM_UP:
+          startTimer();
+          climberIO.setClimberVoltage(-6);
+          if (inputs.climberPosition.in(edu.wpi.first.units.Units.Inches) < 25) {
+            stopTimer();
+            desiredState = ClimberState.STOPPED_MIDDLE;
+            currentState = ClimberState.STOPPED_MIDDLE;
+          } else if (timeoutTimer.hasElapsed(5)) {
+            stopTimer();
+            desiredState = ClimberState.STOPPED_MIDDLE;
+            currentState = ClimberState.STOPPED_MIDDLE;
+          }
+          break;
+        case STOPPED_MIDDLE:
+          climberIO.setClimberVoltage(0);
+          currentState = ClimberState.STOPPED_MIDDLE;
+          desiredState = ClimberState.STOPPED_MIDDLE;
+          break;
+        
+        default:
+          break;
+      }
+    }
+    
+    // This method will be called once per scheduler run
+  }
+
+  public enum ClimberState {
+    CALIBRATING,
+    STOPPED_BOTTOM,
+    TRANSITION_TO_UP,
+    STOPPED_UP,
+    TRANSITION_TO_MIDDLE_FROM_UP,
+    TRANSITION_TO_BOTTOM_FROM_MIDDLE,
+    TRANSITION_TO_BOTTOM_FROM_TOP,
+    STOPPED_MIDDLE
+  }
+
+  private void startTimer() {
+    if (!timeoutTimer.isRunning()) {
+      timeoutTimer.reset();
+      timeoutTimer.start();
+    }
+  }
+  
+  private void stopTimer() {
+    timeoutTimer.stop();
+    timeoutTimer.reset();
+  }
+}

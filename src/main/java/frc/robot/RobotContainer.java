@@ -15,6 +15,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.Climber.ClimberState;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOReal;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -38,6 +42,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Vision vision;
+  private final Climber climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -62,6 +67,7 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVision("Shooter_Cam", VisionConstants.robotToCamera0),
                 new VisionIOPhotonVision("Intake Cam", VisionConstants.robotToCamera1));
+        climber = new Climber(new ClimberIOReal());
         break;
 
       case SIM:
@@ -80,6 +86,8 @@ public class RobotContainer {
                     "Shooter_Cam", VisionConstants.robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(
                     "Intake Cam", VisionConstants.robotToCamera1, drive::getPose));
+        climber = new Climber(new ClimberIO() {});
+
         break;
 
       default:
@@ -92,6 +100,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        climber = new Climber(new ClimberIO() {});
         break;
     }
 
@@ -137,6 +146,9 @@ public class RobotContainer {
     // -> -controller.getLeftX(),()->{return 0.0;}));
 
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.leftTrigger().whileTrue(climber.goToStateCommand(ClimberState.TOP));
+    controller.leftBumper().whileTrue(climber.goToStateCommand(ClimberState.MIDDLE));
+    controller.rightTrigger().whileTrue(climber.goToStateCommand(ClimberState.BOTTOM));
   }
 
   /**
