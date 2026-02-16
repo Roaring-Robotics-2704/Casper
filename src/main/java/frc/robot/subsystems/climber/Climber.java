@@ -12,10 +12,12 @@
  */
 package frc.robot.subsystems.climber;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.InchesPerSecond;
 import static frc.robot.subsystems.climber.ClimberConstants.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -46,8 +48,9 @@ public class Climber extends SubsystemBase {
           startTimer();
           climberIO.setClimberVoltage(-1);
           climberIO.setHookVoltage(0);
-          if ((inputs.climberVelocity.in(InchesPerSecond) < 0.00001)
-              && timeoutTimer.hasElapsed(5)) {
+          if (((inputs.climberVelocity.in(InchesPerSecond) == 0.0)
+                  || inputs.climberCurrent.in(Amps) > 15)
+              && timeoutTimer.hasElapsed(0.5)) {
             climberIO.setClimberVoltage(0);
             climberIO.resetClimberEncoder();
             stopTimer();
@@ -58,11 +61,13 @@ public class Climber extends SubsystemBase {
           break;
         case BOTTOM:
           startTimer();
-          climberIO.setClimberVoltage(-1);
+          climberIO.setClimberVoltage(-2);
           climberIO.setHookVoltage(0);
-          if (inputs.climberPosition.mut_minus(MIN_CLIMBER_HEIGHT).in(Inches)
-                  < CLIMBER_TOLERANCE.in(Inches)
-              || timeoutTimer.hasElapsed(5)) {
+          if (MathUtil.isNear(
+                  inputs.climberPosition.in(Inches),
+                  MIN_CLIMBER_HEIGHT.in(Inches),
+                  CLIMBER_TOLERANCE.in(Inches))
+              || timeoutTimer.hasElapsed(TIMEOUT)) {
             climberIO.setClimberVoltage(0);
             stopTimer();
             currentState = ClimberState.BOTTOM;
@@ -75,11 +80,13 @@ public class Climber extends SubsystemBase {
             climberIO.setClimberVoltage(-2);
 
           } else {
-            climberIO.setClimberVoltage(1);
+            climberIO.setClimberVoltage(2);
           }
-          if (inputs.climberPosition.mut_minus(MID_CLIMBER_HEIGHT).in(Inches)
-                  < CLIMBER_TOLERANCE.in(Inches)
-              || timeoutTimer.hasElapsed(5)) {
+          if (MathUtil.isNear(
+                  inputs.climberPosition.in(Inches),
+                  MID_CLIMBER_HEIGHT.in(Inches),
+                  CLIMBER_TOLERANCE.in(Inches))
+              || timeoutTimer.hasElapsed(TIMEOUT)) {
             climberIO.setClimberVoltage(0);
             stopTimer();
             currentState = ClimberState.MIDDLE;
@@ -87,11 +94,13 @@ public class Climber extends SubsystemBase {
           break;
         case TOP:
           startTimer();
-          climberIO.setClimberVoltage(1);
-          climberIO.setHookVoltage(2);
-          if (inputs.climberPosition.mut_minus(MAX_CLIMBER_HEIGHT).in(Inches)
-                  < CLIMBER_TOLERANCE.in(Inches)
-              || timeoutTimer.hasElapsed(5)) {
+          climberIO.setClimberVoltage(2);
+          climberIO.setHookVoltage(1);
+          if (MathUtil.isNear(
+                  inputs.climberPosition.in(Inches),
+                  MAX_CLIMBER_HEIGHT.in(Inches),
+                  CLIMBER_TOLERANCE.in(Inches))
+              || timeoutTimer.hasElapsed(TIMEOUT)) {
             climberIO.setClimberVoltage(0);
             stopTimer();
             currentState = ClimberState.TOP;
