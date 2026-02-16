@@ -11,6 +11,9 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
+
+  public class ShooterInputs {}
+
   private final SparkMax leftMotor;
   private final SparkMax rightMotor;
 
@@ -19,6 +22,8 @@ public class Shooter extends SubsystemBase {
     leftMotor = new SparkMax(LEFT_MOTOR_ID, SparkMax.MotorType.kBrushless);
     rightMotor = new SparkMax(RIGHT_MOTOR_ID, SparkMax.MotorType.kBrushless);
   }
+
+  public void updateInputs(ShooterInputs inputs) {}
 
   @Override
   public void periodic() {}

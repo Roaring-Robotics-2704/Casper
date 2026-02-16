@@ -4,19 +4,10 @@
 
 package frc.robot.subsystems.climber;
 
-import static edu.wpi.first.units.Units.Volts;
-import static frc.robot.subsystems.climber.ClimberConstants.CLIMBER_GEARING;
-import static frc.robot.subsystems.climber.ClimberConstants.CLIMBER_MOTOR_TYPE;
-
-import org.ironmaple.simulation.motorsims.MapleMotorSim;
-import org.ironmaple.simulation.motorsims.SimMotorConfigs;
-
-import edu.wpi.first.units.MomentOfInertiaUnit;
-import edu.wpi.first.units.measure.MomentOfInertia;
-
 public class ClimberIOSim implements ClimberIO {
   // MapleMotorSim climberMotorSim =
-  //     new MapleMotorSim(new SimMotorConfigs(CLIMBER_MOTOR_TYPE, CLIMBER_GEARING, , Volts.of(0.5)));
+  //     new MapleMotorSim(new SimMotorConfigs(CLIMBER_MOTOR_TYPE, CLIMBER_GEARING, ,
+  // Volts.of(0.5)));
 
   public ClimberIOSim() {}
 }

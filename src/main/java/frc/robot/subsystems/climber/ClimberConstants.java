@@ -23,7 +23,7 @@ public class ClimberConstants {
   public static final int CLIMBER_FREE_CURRENT_LIMIT = 40;
 
   public static final Distance CLIMBER_PULLEY_CIRCUMFERENCE =
-      Inches.of(0.75 * Math.PI); // Assuming a 3 inch diameter pulley
+      Inches.of(0.625 * Math.PI); // Assuming a 3 inch diameter pulley
   public static final double CLIMBER_GEARING = 45.0; // 45:1 gear reduction
 
   public static final int HOOK_MOTOR_ID = 42;
@@ -34,9 +34,9 @@ public class ClimberConstants {
   public static final DCMotor HOOK_MOTOR_TYPE = DCMotor.getNeo550(1);
 
   public static final Distance MAX_CLIMBER_HEIGHT =
-      Inches.of(10); // Maximum height the climber can reach
+      Inches.of(8.5); // Maximum height the climber can reach
   public static final Distance MIN_CLIMBER_HEIGHT =
-      Inches.of(0); // Minimum height the climber can reach
+      Inches.of(0.5); // Minimum height the climber can reach
   public static final Distance MID_CLIMBER_HEIGHT = Inches.of(5); // Middle height of the climber
   public static final Distance CLIMBER_TOLERANCE =
       Inches.of(0.01); // Tolerance for reaching target heights

@@ -48,20 +48,25 @@ public class Climber extends SubsystemBase {
           startTimer();
           climberIO.setClimberVoltage(-1);
           climberIO.setHookVoltage(0);
-          if (((inputs.climberVelocity.in(InchesPerSecond) == 0.0)
+          if (((Math.abs(inputs.climberVelocity.in(InchesPerSecond)) < 0.01)
                   || inputs.climberCurrent.in(Amps) > 15)
               && timeoutTimer.hasElapsed(0.5)) {
             climberIO.setClimberVoltage(0);
             climberIO.resetClimberEncoder();
             stopTimer();
             desiredState = ClimberState.BOTTOM;
-            currentState = ClimberState.BOTTOM;
+            currentState = ClimberState.CALIBRATING;
           }
 
           break;
         case BOTTOM:
           startTimer();
-          climberIO.setClimberVoltage(-2);
+          if (inputs.climberPosition.in(Inches) > MIN_CLIMBER_HEIGHT.in(Inches)) {
+            climberIO.setClimberVoltage(-2);
+
+          } else {
+            climberIO.setClimberVoltage(2);
+          }
           climberIO.setHookVoltage(0);
           if (MathUtil.isNear(
                   inputs.climberPosition.in(Inches),

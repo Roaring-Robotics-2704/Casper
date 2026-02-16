@@ -29,8 +29,8 @@ public class ClimberIOReal implements ClimberIO {
         ClimberConstants.CLIMBER_STALL_CURRENT_LIMIT, ClimberConstants.CLIMBER_FREE_CURRENT_LIMIT);
     config.idleMode(IdleMode.kBrake);
     config.encoder.positionConversionFactor(
-        ClimberConstants.CLIMBER_GEARING
-            * ClimberConstants.CLIMBER_PULLEY_CIRCUMFERENCE.in(Inches));
+        ClimberConstants.CLIMBER_PULLEY_CIRCUMFERENCE.in(Inches)
+            / ClimberConstants.CLIMBER_GEARING);
     config.inverted(true);
     SparkUtil.tryUntilOk(
         climberMotor,
